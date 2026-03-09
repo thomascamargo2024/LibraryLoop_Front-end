@@ -1,4 +1,4 @@
-export const categorias = [
+ export const categorias = [
     {
       titulo: "Literatura & Ficção",
       itens: [

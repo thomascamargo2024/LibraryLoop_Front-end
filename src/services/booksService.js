@@ -1,23 +1,22 @@
 export async function getBooksByCategory(category) {
-  try {
-    const response = await fetch(
-      `https://openlibrary.org/subjects/${category}.json?limit=12`
-    );
 
-    const data = await response.json();
+  const url = `http://localhost:8080/books/search?title=${category}&limit=12`
 
-    return data.works.map((book) => ({
-      id: book.key,
-      title: book.title,
-      author: book.authors?.[0]?.name || "Autor desconhecido",
-      rating: Math.floor(Math.random() * 2) + 4,
-      image: book.cover_id
-        ? `https://covers.openlibrary.org/b/id/${book.cover_id}-M.jpg`
-        : "https://via.placeholder.com/150x220?text=Sem+Capa",
-      downloadUrl: `https://openlibrary.org${book.key}`
-    }));
-  } catch (error) {
-    console.error("Erro ao buscar livros:", error);
-    return [];
-  }
+  console.log("Chamando backend:", url)
+
+  const response = await fetch(url)
+
+  const data = await response.json()
+
+  console.log("Resposta do backend:", data)
+
+  return data.map((book) => ({
+    id: book.olid,
+    title: book.title,
+    author: book.authorName?.[0] || "Autor desconhecido",
+    rating: Math.floor(Math.random() * 2) + 4,
+    image: book.coverId
+      ? `https://covers.openlibrary.org/b/id/${book.coverId}-M.jpg`
+      : "https://via.placeholder.com/150x220?text=Sem+Capa"
+  }))
 }
