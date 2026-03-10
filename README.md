@@ -34,7 +34,7 @@ livraria-frontend
 O frontend consome a API disponível no repositório:
 
 ```
-(link do seu backend aqui)
+(###)
 ```
 
 ## ▶️ Como executar o projeto
