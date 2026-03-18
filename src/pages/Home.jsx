@@ -1,35 +1,35 @@
 import logo from "../assets/logo-loopCode-Books.png";
-import pngwing from "../assets/pngwing.com.png";
 import { useEffect, useState } from "react";
 import Stars from "../components/Stars";
 import DownloadButton from "../components/DownloadButton";
 import { getBooksByCategory } from "../services/booksService";
 import { categorias } from "../data/categories";
+import { Bell, Download, Search } from "lucide-react";
+import "../styles/home.css";
 
 export default function Home() {
+
   const [books, setBooks] = useState([]);
   const [categoriaAtiva, setCategoriaAtiva] = useState("programming");
   const [loading, setLoading] = useState(true);
-  const [mostrarMais, setMostrarMais] = useState(false);
-  const [livrosVisiveis, setLivrosVisiveis] = useState(8);
+  const [livrosVisiveis, setLivrosVisiveis] = useState(10);
   const [search, setSearch] = useState("");
 
- useEffect(() => {
-  async function loadBooks() {
-    try {
-      setLoading(true);
-      const data = await getBooksByCategory(categoriaAtiva);
-      console.log("Livros do backend:", data); 
-      setBooks(data);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    async function loadBooks() {
+      try {
+        setLoading(true);
+        const data = await getBooksByCategory(categoriaAtiva);
+        setBooks(data);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
     }
-  }
 
-  loadBooks();
-}, [categoriaAtiva]);
+    loadBooks();
+  }, [categoriaAtiva]);
 
   const filteredBooks = books.filter((book) =>
     book.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -42,141 +42,213 @@ export default function Home() {
       if (response.readOnline) return response.url;
       return null;
     } catch (e) {
-      console.error("Erro ao obter link de leitura:", e);
+      console.error(e);
       return null;
     }
   };
 
   return (
-    <>
-      <header className="flex items-center justify-between pt-3 px-6 md:px-20 border-b border-zinc-200 pb-1">
-        <div>
-          <img className="w-20 md:w-18 h-auto" src={logo} alt="Logo LoopCode Books" />
+
+    <div className="min-h-screen bg-[#0f172a] text-white">
+
+      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4 bg-[#111827] border-b border-[#1f2937]">
+
+        <div className="flex items-center gap-3">
+
+          <div className="bg-purple-600 p-2 rounded-lg">
+
+            <img
+              src={logo}
+              alt="Logo"
+              className="w-6 h-6 object-contain"
+            />
+
+          </div>
+
+          <div>
+            <h1 className="font-semibold text-sm">ExpoBooks</h1>
+            <p className="text-xs text-gray-400">Library</p>
+          </div>
+
         </div>
 
-        <div className="hidden md:flex gap-8 text-gray-900 font-medium">
-          <a className="border-b-2 border-transparent hover:border-blue-800 transition-colors duration-200" href="#">Home</a>
-          <a className="border-b-2 border-transparent hover:border-blue-800 transition-colors duration-200" href="#">Catálogos</a>
-          <a className="border-b-2 border-transparent hover:border-blue-800 transition-colors duration-200" href="#">Generos</a>
-          <a className="border-b-2 border-transparent hover:border-blue-800 transition-colors duration-200" href="#">Contatos</a>
+
+        <div className="flex-1 flex justify-center px-10">
+
+          <div className="relative w-full max-w-xl">
+
+            <Search
+              size={16}
+              className="absolute left-3 top-2.5 text-gray-400"
+            />
+
+            <input
+              type="text"
+              placeholder="Pesquise por título, autor..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full bg-[#1f2937] pl-9 pr-4 py-2 rounded-full text-sm outline-none focus:ring-2 focus:ring-purple-600"
+            />
+
+          </div>
+
         </div>
 
-        <div className="relative w-full md:w-64 mt-3 md:mt-0">
-          <input
-            type="text"
-            placeholder="Pesquisar..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+        <div className="flex items-center gap-5">
+
+
+          <button className="relative text-gray-400 hover:text-white transition">
+
+            <Bell size={20} />
+
+            <span className="absolute -top-1 -right-1 bg-red-500 w-2 h-2 rounded-full"></span>
+
+          </button>
+
+          <div className="flex items-center gap-2 bg-[#1f2937] px-3 py-1.5 rounded-full text-sm text-gray-300">
+
+            <Download size={16} />
+
+            <span>
+              0 baixados
+            </span>
+
+          </div>
+
+          <div className="w-9 h-9 rounded-full border-2 border-purple-500 overflow-hidden">
+
+            <img
+              src="https://i.pravatar.cc/100"
+              className="w-full h-full object-cover"
+            />
+
+          </div>
+
         </div>
+
       </header>
 
-      <aside className="h-2/12 flex flex-col md:flex-row justify-evenly items-center p-4 bg-blue-950 mt-1.5 gap-4" >
-        <img className="w-15 md:w-20 h-auto" src={pngwing} alt="png winglivros" />
-        <div className="text-center md:text-left">
-          <h1 className="text-2xl text-white mb-1">
-            A maior rede social para leitores do Brasil
-          </h1>
-          <p className="text-white">
-            O Skoob é a comunidade perfeita para quem ama livros. Organize suas leituras e descubra novos livros, autores, editoras e amigos.
-          </p>
-        </div>
-        <div>
-          <button className="p-2.5 px-10 bg-blue-500 rounded-full text-white hover:bg-blue-400">Destaques</button>
-        </div>
-      </aside>
 
-      <section className="flex justify-center mt-6 px-6">
-        <div className="flex w-[95%] gap-6">
+      <div className="flex">
 
-          <aside className="w-[260px] shrink-0 h-screen bg-gray-50 p-4">
-            <nav>
-              {categorias.map((grupo, index) => (
-                <div key={index} className="mb-6">
-                  <h4 className="font-bold mb-2">{grupo.titulo}</h4>
-                  <div className="flex flex-col gap-1">
-                    {grupo.itens.map((categoria) => (
-                      <button
-                        key={categoria.slug}
-                        onClick={() => setCategoriaAtiva(categoria.slug)}
-                        className={`text-left pl-2 border-l-2 transition-all
-                          ${categoriaAtiva === categoria.slug
-                            ? "border-blue-800 text-blue-800 font-semibold"
-                            : "border-transparent hover:border-blue-800"
-                          }`}
-                      >
-                        {categoria.nome}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </nav>
-          </aside>
 
-          <main className="flex-1">
-            {loading ? (
-              <p>Carregando livros...</p>
-            ) : (
-              <div className="flex flex-wrap gap-1">
-                {filteredBooks.slice(0, livrosVisiveis).map((book) => (
-                  <div key={book.id} className="flex flex-col bg-white rounded-md shadow p-2 ">
-                    <img
-                      className="w-full h-65 object-cover rounded-md"
-                      src={book.image}
-                      alt={book.title}
-                    />
-                    <h3 className="mt-2 text-sm font-semibold line-clamp-2 min-h-[40px]">
+        <aside className="w-64 bg-[#111827] p-6 flex flex-col gap-6 hidden lg:flex">
+
+          <input
+            type="text"
+            placeholder="Buscar livros..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-[#1f2937] rounded-lg px-3 py-2 text-sm outline-none"
+          />
+
+          <div className="flex flex-col gap-2">
+
+            <p className="text-xs text-gray-400 uppercase">
+              Categorias
+            </p>
+
+            {categorias.map((grupo) =>
+              grupo.itens.map((categoria) => (
+                <button
+                  key={categoria.slug}
+                  onClick={() => setCategoriaAtiva(categoria.slug)}
+                  className={`text-left px-3 py-2 rounded-lg text-sm transition
+                  ${categoriaAtiva === categoria.slug
+                      ? "bg-purple-600"
+                      : "hover:bg-[#1f2937]"
+                    }`}
+                >
+                  {categoria.nome}
+                </button>
+              ))
+            )}
+
+          </div>
+
+        </aside>
+
+
+        <main className="flex-1 p-8 pt-20" >
+
+          <div className="flex justify-between items-center mb-6">
+
+            <div>
+              <h1 className="text-2xl font-bold">
+                Todos os Livros
+              </h1>
+
+              <p className="text-sm text-gray-400">
+                {filteredBooks.length} livros encontrados
+              </p>
+            </div>
+
+          </div>
+
+          {loading ? (
+            <p>Carregando livros...</p>
+          ) : (
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+
+              {filteredBooks.slice(0, livrosVisiveis).map((book) => (
+
+                <div
+                  key={book.id}
+                  className="bg-[#1f2937] rounded-xl overflow-hidden shadow-lg hover:scale-[1.02] transition-all w-full max-w-xs"
+                >
+
+                  <img
+                    src={book.image}
+                    className="w-full h-48 sm:h-72 object-cover"
+                  />
+
+                  <div className="p-2 flex flex-col gap-2">
+
+                    <h3 className="text-sm font-semibold line-clamp-2">
                       {book.title}
                     </h3>
-                    <p className="text-xs text-zinc-500 line-clamp-1 min-h-[20px]">
+
+                    <p className="text-xs text-gray-400">
                       {book.author}
                     </p>
-                    <div className="mt-auto pt-2 flex flex-col gap-1">
-                      <Stars rating={book.rating} />
-                      <DownloadButton
-                        url={book.downloadUrl}
-                        readLinkFetcher={() => handleReadLink(book.id)}
-                      />
-                    </div>
+
+                    <Stars rating={book.rating} />
+
+                    <DownloadButton
+                      url={book.downloadUrl}
+                      readLinkFetcher={() => handleReadLink(book.id)}
+                    />
+
                   </div>
-                ))}
-              </div>
-            )}
 
-            {livrosVisiveis < books.length && (
-              <div className="flex justify-center mt-4">
-                <button
-                  onClick={() => setLivrosVisiveis((prev) => prev + 4)}
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-md transition-colors"
-                >
-                  Ver Mais
-                </button>
-              </div>
-            )}
-          </main>
-        </div>
-      </section>
+                </div>
 
-      <footer className="bg-blue-950 text-white mt-10">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-center md:text-left">
-            <h2 className="text-lg font-bold">Equipe:</h2>
-            <p className="text-sm">Thomas, Gustavo, Nicolas e Marcelo</p>
-          </div>
+              ))}
 
-          <div className="flex gap-4">
-            <a href="#" className="hover:text-blue-400 transition-colors">GitHub</a>
-            <a href="#" className="hover:text-blue-400 transition-colors">LinkedIn</a>
-            <a href="#" className="hover:text-blue-400 transition-colors">Portfólio</a>
-          </div>
-        </div>
+            </div>
+          )}
 
-        <div className="border-t border-blue-300 mt-2 pt-1 text-center text-sm text-gray-300 pb-2">
-          © {new Date().getFullYear()} LoopCode Books. Todos os direitos reservados.
-        </div>
-      </footer>
-    </>
+          {livrosVisiveis < books.length && (
+
+            <div className="flex justify-center mt-8">
+
+              <button
+                onClick={() => setLivrosVisiveis((prev) => prev + 6)}
+                className="bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded-lg"
+              >
+                Ver mais
+              </button>
+
+            </div>
+
+          )}
+
+        </main>
+
+      </div>
+
+    </div>
+
   );
 }
