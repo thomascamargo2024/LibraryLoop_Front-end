@@ -1,4 +1,4 @@
-# 📚 Livraria - Frontend
+# 📚 Livraria - Front-end
 
 Interface web do projeto **Livraria**, responsável pela interação do usuário com o sistema.
 
