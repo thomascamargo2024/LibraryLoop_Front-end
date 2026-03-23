@@ -51,7 +51,7 @@ export default function Home() {
 
     <div className="min-h-screen bg-[#0f172a] text-white">
 
-      <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4 bg-[#111827] border-b border-[#1f2937]">
+      <header className="fixed top-1 left-0 right-0 z-50 flex items-center justify-between px-8 py-4 bg-[#111827] border-b border-[#1f2937]">
 
         <div className="flex items-center gap-3">
 
